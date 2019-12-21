@@ -550,6 +550,9 @@ func (g *Generator) Generate() error {
 				g.printf("\tif rf, ok := ret.Get(%d).(func(%s) %s); ok {\n",
 					idx, strings.Join(params.Types, ", "), typ)
 				g.printf("\t\tr%d = rf(%s)\n", idx, formattedParamNames)
+				g.printf("\t} else if rf, ok := ret.Get(%d).(func() %s); ok {\n",
+					idx, typ)
+				g.printf("\t\tr%d = rf()\n", idx)
 				g.printf("\t} else {\n")
 				if typ == "error" {
 					g.printf("\t\tr%d = ret.Error(%d)\n", idx, idx)
